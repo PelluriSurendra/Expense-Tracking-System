@@ -11,7 +11,7 @@ This project is an expense management system that consists of a Streamlit fronte
   - Set a monthly budget
   - Get real-time alerts if your expenses exceed your set budget
     
-## Project Structure
+## 🗂 Project Structure
 
 - **frontend/**: Contains the Streamlit application code.
 - **backend/**: Contains the FastAPI backend server code.
@@ -20,7 +20,7 @@ This project is an expense management system that consists of a Streamlit fronte
 - **README.md**: Provides an overview and instructions for the project.
 
 
-## Setup Instructions
+## ⚙️ Setup Instructions
 
 1. **Clone the repository**:
    ```bash
