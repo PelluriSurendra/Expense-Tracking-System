@@ -53,4 +53,15 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-26 15:01:53
+
+CREATE TABLE IF NOT EXISTS budgets (
+    year INT NOT NULL,
+    month INT NOT NULL,
+    amount FLOAT NOT NULL,
+    PRIMARY KEY (year, month)
+);
+select * from budgets;
+
+INSERT INTO budgets (year, month, amount)
+VALUES (2023, 8, 7000);
+
