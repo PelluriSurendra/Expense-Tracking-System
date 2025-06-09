@@ -24,6 +24,7 @@ def analytics_tab():
         response = requests.post(f"{API_URL}/analytics/", json=payload)
         response = response.json()
 
+
         data = {
             "Category": list(response.keys()),
             "Total": [response[category]["total"] for category in response],
@@ -42,3 +43,36 @@ def analytics_tab():
 
         st.table(df_sorted)
 
+        # --- Fetch Monthly Budget ---
+        # Use the month of the end_date for budget lookup
+        year, month = end_date.year, end_date.month
+        budget_resp = requests.get(f"{API_URL}/budget/{year}/{month}")
+        if budget_resp.status_code == 200:
+            budget_amount = budget_resp.json()["amount"]
+        else:
+            # If no budget set, default to 0 (or prompt user elsewhere)
+            budget_amount = 0.0
+
+        # --- Compute Totals ---
+        total_spent = sum([response[c]["total"] for c in response])
+
+        # --- Display Budget Progress ---
+        if budget_amount > 0:
+            st.markdown("### 📊 Budget vs. Actual Spending")
+            percent_used = min(total_spent / budget_amount, 1.0)
+            st.progress(percent_used)
+
+            # Display numbers
+            st.write(f"**Budget:** ₹{budget_amount:.2f}")
+            st.write(f"**Spent:** ₹{total_spent:.2f}")
+            st.write(f"**Remaining:** ₹{(budget_amount - total_spent):.2f}")
+
+            # Alert if over budget
+            if total_spent > budget_amount:
+                st.error(f"⚠️ You have exceeded your budget by ₹{(total_spent - budget_amount):.2f}!")
+            else:
+                st.success("✅ You are within your budget.")
+        else:
+            st.info("ℹ️ No budget set for this month. Set one in the **Budget** tab.")
+
+        
