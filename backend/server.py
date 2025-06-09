@@ -27,6 +27,8 @@ def get_expenses(expense_date: date):
     return expenses
 
 
+
+
 @app.post("/expenses/{expense_date}")
 def add_or_update_expense(expense_date: date, expenses:List[Expense]):
     db_helper.delete_expenses_for_date(expense_date)
@@ -53,3 +55,41 @@ def get_analytics(date_range: DateRange):
         }
 
     return breakdown
+
+@app.get("/monthly_summary/")
+def get_analytics():
+    monthly_summary = db_helper.fetch_monthly_expense_summary()
+    if monthly_summary is None:
+        raise HTTPException(status_code=500, detail="Failed to retrieve monthly expense summary from the database.")
+
+    return monthly_summary
+
+class BudgetRequest(BaseModel):
+    year: int
+    month: int
+    amount: float
+
+class BudgetResponse(BaseModel):
+    year: int
+    month: int
+    amount: float
+
+
+@app.post("/budget/")
+def set_budget(budget: BudgetRequest):
+    try:
+        db_helper.insert_or_update_budget(budget.year, budget.month, budget.amount)
+        return {"message": "Budget saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save budget: {str(e)}")
+
+
+@app.get("/budget/{year}/{month}", response_model=BudgetResponse)
+def get_budget(year: int, month: int):
+    try:
+        amount = db_helper.get_budget(year, month)
+        if amount is None:
+            raise HTTPException(status_code=404, detail="Budget not found")
+        return BudgetResponse(year=year, month=month, amount=amount)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve budget: {str(e)}")
