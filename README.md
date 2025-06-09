@@ -4,12 +4,25 @@ This project is an expense management system that consists of a Streamlit fronte
 
 ## 🚀 Features
 
-- Add, update, and delete expenses
-- View expense history and filter by date
-- Visualize spending through charts and summaries
-- **🆕 Budget Management Tab**  
-  - Set a monthly budget
-  - Get real-time alerts if your expenses exceed your set budget
+- ➕ Add, update, and delete expenses  
+- 📅 View expense history and filter by date  
+- 📊 Visualize spending through charts and summaries  
+
+---
+
+## 🆕 Budget Management Tab
+
+- 🎯 Set a monthly budget  
+- 🚨 Get real-time alerts if your expenses exceed your set budget  
+
+---
+
+## 📈 Monthly Analytics Tab
+
+- 📅 View monthly expense breakdown  
+- 📊 Analyze total spending by month using bar charts  
+- 📋 Tabular summary sorted by latest month  
+
     
 ## 🗂 Project Structure
 
