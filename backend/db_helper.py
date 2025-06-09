@@ -59,6 +59,39 @@ def fetch_expense_summary(start_date, end_date):
         data = cursor.fetchall()
         return data
 
+def fetch_monthly_expense_summary():
+    logger.info(f"fetch_expense_summary_by_months")
+    with get_db_cursor() as cursor:
+        cursor.execute(
+            '''SELECT month(expense_date) as expense_month, 
+               monthname(expense_date) as month_name,
+               sum(amount) as total FROM expenses
+               GROUP BY expense_month, month_name;
+            '''
+        )
+        data = cursor.fetchall()
+        return data
+
+
+def insert_or_update_budget(year, month, amount):
+    with get_db_cursor(commit=True) as cursor:
+        cursor.execute("""
+            INSERT INTO budgets (year, month, amount)
+            VALUES (%s, %s, %s)
+            ON DUPLICATE KEY UPDATE amount = VALUES(amount)
+        """, (year, month, amount))
+
+
+def get_budget(year, month):
+    with get_db_cursor() as cursor:
+        cursor.execute("""
+            SELECT amount FROM budgets
+            WHERE year = %s AND month = %s
+        """, (year, month))
+        result = cursor.fetchone()
+        return result['amount'] if result else None
+
+
 
 if __name__ == "__main__":
     expenses = fetch_expenses_for_date("2024-09-30")
